@@ -8,6 +8,10 @@ class Face_Recognition_System:
         self.root.geometry("1530x790+0+0")
         self.root.title("Face Recognition System")
 
+img=Image.open("gtr3.jpg")
+
+
+
 # The following block should be outside the class definition
 if __name__ == "__main__":
     root = Tk()
