@@ -212,11 +212,11 @@ class Student:
 
         #radio Buttons
         self.var_radio1=StringVar()
-        radionbtn1=ttk.Radiobutton(class_Student_frame,textvariable=self.var_radio1,text="Take photo sample",value="yes")
+        radionbtn1=ttk.Radiobutton(class_Student_frame,variable=self.var_radio1,text="Take photo sample",value="yes")
         radionbtn1.grid(row=6,column=0)
-        self.var_radio2=StringVar()
+       
         
-        radionbtn2=ttk.Radiobutton(class_Student_frame,textvariable=self.var_radio2,text="No photo sample",value="No")
+        radionbtn2=ttk.Radiobutton(class_Student_frame,variable=self.var_radio1,text="No photo sample",value="No")
         radionbtn2.grid(row=6,column=1)
 
         #bbuttons frame
@@ -228,7 +228,7 @@ class Student:
         save_btn.grid(row=0,column=0)
 
         #update
-        update_btn=Button(btn_frame,text="Update",font=("times new roman",13,"bold"),bg="blue",fg="white")
+        update_btn=Button(btn_frame,text="Update",command=self.update_data,font=("times new roman",13,"bold"),bg="blue",fg="white")
         update_btn.grid(row=0,column=1)
 
         #delete
@@ -251,12 +251,73 @@ class Student:
         #right label frame
         Right_frame=LabelFrame(main_frame,bd=2,bg="white",relief=RIDGE,text="Student Details",font=("times new roman",12,"bold"))
         Right_frame.place(x=705,y=10,width=560,height=580)
+        img_right = Image.open(r"/Users/sudippokharel/Downloads/sas1.jpg")
+        img_right = img_left.resize((680, 130), Image.LANCZOS)  # Adjusted size
+        self.photoimg_right = ImageTk.PhotoImage(img_right)
         
         
-        
+        f_lbl2 = Label(Right_frame, image=self.photoimg_right)
+        f_lbl2.place(x=5, y=0, width=680, height=130)
 
-        self.student_table.bind("<ButtonRelease>",self.get_cursor)
+        #---------search system---------
+        search_frame=LabelFrame(Right_frame,bd=2,bg="white",relief=RIDGE,text="Search System",font=("times new roman",12,"bold"))
+        search_frame.place(x=5,y=135,width=550,height=80)
+
+        search_label=Label(search_frame,text="Search By:",font=("times new roman",13,"bold"),bg="red",fg="white")
+        search_label.grid(row=0,column=0,padx=10,pady=5,sticky=W)
+
+        search_combo=ttk.Combobox(search_frame,font=("times new roman",13,"bold"),width="15",state="readonly")
+        search_combo["values"]=("Select","Roll_No","Phone_No")
+        search_combo.current(0)
+        search_combo.grid(row=0,column=1,padx=2,pady=10,sticky=W)
+
+        search_entry=ttk.Entry(search_frame,width=10,font=("times new roman",13,"bold"))
+        search_entry.grid(row=0,column=2,padx=10,pady=5,sticky=W)
+
+
+        search_btn=Button(search_frame,text="Search",width="8",font=("times new roman",8,"bold"),bg="blue",fg="white")
+        search_btn.grid(row=0,column=3,padx=4)
+
+        showAll_btn=Button(search_frame,text="Show All",width="8",font=("times new roman",8,"bold"),bg="blue",fg="white")
+        showAll_btn.grid(row=0,column=4,padx=4)
+
+        #---------------table frame-------------
+        table_frame=Frame(Right_frame,bd=2,bg="white",relief=RIDGE)
+        table_frame.place(x=5,y=230,width=550,height=250)
+
+        scroll_x=ttk.Scrollbar(table_frame,orient=HORIZONTAL)
+        scroll_y=ttk.Scrollbar(table_frame,orient=VERTICAL)
+
+        self.student_table=ttk.Treeview(table_frame,column=("dep","course","year","sem","id","name","div","roll","gender","dob","email","phone","address","teacher"),xscrollcommand=scroll_x.set,yscrollcommand=scroll_y.set)
+
+        scroll_x.pack(side=BOTTOM,fill=X)
+        scroll_y.pack(side=RIGHT,fill=Y)
+        scroll_x.config(command=self.student_table.xview)
+        scroll_y.config(command=self.student_table.yview)
+
+        self.student_table.heading("dep",text="Department")
+        self.student_table.heading("course",text="Course")
+        self.student_table.heading("year",text="Year")
+        self.student_table.heading("sem",text="Semester")
+        self.student_table.heading("id",text="StudentId")
+        self.student_table.heading("name",text="Name")
+        self.student_table.heading("div",text="Division")
+        self.student_table.heading("roll",text="Roll")
+        self.student_table.heading("gender",text="Gender")
+        self.student_table.heading("dob",text="DOB")
+        self.student_table.heading("email",text="Email")
+        self.student_table.heading("phone",text="Phone")
+        self.student_table.heading("address",text="Address")
+        self.student_table.heading("teacher",text="Teacher")
+        #self.student_table.heading("photo",text="PhotoSampleStatus")
+        self.student_table["show"]="headings"
+
+        self.student_table.column("dep",width=100)
+
+        self.student_table.pack(fill=BOTH,expand=1) 
         self.fetch_data()
+        self.student_table.bind("<ButtonRelease>",self.get_cursor)
+        
 #======Validate the fillup boxes=======
        
     def add_data(self):
@@ -297,21 +358,21 @@ class Student:
 
             #data lai fetch gareko
 
-def fetch_data(self):
-                 conn=mysql.connector.connect(host="localhost:3306",username="root",password="sudip@123",database="Face_recognition_system")
+    def fetch_data(self):
+                 conn=mysql.connector.connect(host="localhost",username="root",password="sudip@123",database="Face_recognition_system")
                  my_cursor=conn.cursor()
                  my_cursor.execute("select * from student")
                  data=my_cursor.fetchall()
 
-                 if len()!=0:
-                     self.student_table.delete(*self.student_table.get_children())
+                 if len(data)!=0:
+                     self.student_table.delete(* self.student_table.get_children())
                      for i in data:
                          self.student_table.insert("",END,values=i)
                          conn.commit()
                  conn.close()
                  
             #get cursor
-def get_cursor(self,event=""):
+    def get_cursor(self,event=""):
                 cursor_focus=self.student_table.focus()
                 content=self.student_table.item(cursor_focus)
                 data=content["values"]
@@ -321,7 +382,7 @@ def get_cursor(self,event=""):
                 self.var_year.set(data[2]),
                 self.var_semester.set(data[3]),
                 self.var_student_id.set(data[4]),
-                self.var_name.set(data[5]),
+                self.var_Name.set(data[5]),
                 self.var_Division.set(data[6]),
                 self.var_Roll.set(data[7]),
                 self.var_Gender.set(data[8]),
@@ -331,14 +392,55 @@ def get_cursor(self,event=""):
                 self.var_Address.set(data[12]),
                 self.var_Teacher.set(data[13]),
                 self.var_radio1.set(data[14])
+
+                #update ko lagi
+    def update_data(self):
+        if self.var_Department.get() == "Select Department"or self.var_course.get() == "Select Course"or self.var_year.get() == "Select Year" or self.var_semester.get() == "Select Semester"or not self.var_student_id.get()or not self.var_Name.get() or not self.var_Roll.get() or not self.var_Gender.get()or not self.var_DOB.get() or not self.var_Email.get()or not self.var_phone.get() or not self.var_Address.get()or not self.var_Teacher.get():
+          messagebox.showerror("Error","All Fields are required",) #shows in parent box and my sql connection
+        else:
+            try:
+                update=messagebox.askyesno("update","do you want to update this details",parent=self.root)
+                if update>0:
+                    conn=mysql.connector.connect(host="localhost",username="root",password="sudip@123",database="Face_recognition_system")
+                    my_cursor=conn.cursor()
+                    my_cursor.execute("UPDATE student set Department=%s,course=%s,year=%s,semester=%s,Name=%s,Division=%s,Roll=%s,Gender=%s,DOB=%s,Email=%s,phone=%s,Address=%s,Teacher=%s,photosample=%s where student_id=%s",(
+                                                                                                                            self.var_Department.get(),
+                                                                                                                            self.var_course.get(),
+                                                                                                                            self.var_year.get(),
+                                                                                                                            self.var_semester.get(),
+                                                                                                                            
+                                                                                                                            self.var_Name.get(),
+                                                                                                                            self.var_Division.get(),
+                                                                                                                            self.var_Roll.get(),
+                                                                                                                            self.var_Gender.get(),
+                                                                                                                            self.var_DOB.get(),
+                                                                                                                            self.var_Email.get(),
+                                                                                                                            self.var_phone.get(),
+                                                                                                                            self.var_Address.get(),
+                                                                                                                            self.var_Teacher.get(),
+                                                                                                                            self.var_radio1.get(),
+                                                                                                                            int(self.var_student_id.get()),
+                                                                                                                            
+       
+
+                                                                                                                                  ))
+                else:
+                    if not update:
+                        return
+                messagebox.showinfo("Success","Student details updated succesfully",parent=self.root)
+                conn.commit()
+                self.fetch_data()
+                conn.close()
+            except Exception as e:
+
+                messagebox.showerror("Error",f"Due to {str(e)}",parent=self.root)
+            
+
+
         
      
          
     
-        
-
-#self.student_table.bind("<ButtonRelease>",self.get_cursor)
-#self.fetch_data()
         
 
 if __name__ == "__main__":
