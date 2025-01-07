@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 from PIL import Image, ImageTk
+from student import Student
 
 class Face_Recognition_System:
     def __init__(self, root):
@@ -52,11 +53,11 @@ class Face_Recognition_System:
         img4 = img4.resize((220, 220), Image.LANCZOS)  # Adjusted size
         self.photoimg4 = ImageTk.PhotoImage(img4)
 
-        b1=Button(bg_img,image=self.photoimg4,cursor="hand2")
+        b1=Button(bg_img,image=self.photoimg4,command=self.student_details,cursor="hand2")
         b1.place(x=100,y=100,width=200,height=175)
 
 
-        b1_1=Button(bg_img,text="Student Details",cursor="hand2",font=("times new roman",15,"bold"),bg="darkblue",fg="white")
+        b1_1=Button(bg_img,text="Student Details",command=self.student_details,cursor="hand2",font=("times new roman",15,"bold"),bg="darkblue",fg="white")
         b1_1.place(x=100,y=255,width=200,height=35)
 
 
@@ -150,8 +151,14 @@ class Face_Recognition_System:
         b1_1=Button(bg_img,text="Exit",cursor="hand2",font=("times new roman",15,"bold"),bg="darkblue",fg="white")
         b1_1.place(x=1000,y=510,width=200,height=35)
 
+        #function buttons
 
-if __name__ == "__main__":
-    root = Tk()
-    obj = Face_Recognition_System(root)
-    root.mainloop()
+        def student_details(self):
+            self.new_window=Toplevel(self.root)
+            self.app=Student(self.new_window)
+
+
+        if __name__ == "__main__":
+            root = Tk()
+            obj = Face_Recognition_System(root)
+            root.mainloop()
