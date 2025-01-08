@@ -232,11 +232,11 @@ class Student:
         update_btn.grid(row=0,column=1)
 
         #delete
-        delete_btn=Button(btn_frame,text="Delete",font=("times new roman",13,"bold"),bg="blue",fg="white")
+        delete_btn=Button(btn_frame,text="Delete",command=self.delete_data,font=("times new roman",13,"bold"),bg="blue",fg="white")
         delete_btn.grid(row=0,column=2)
 
          #reset
-        delete_btn=Button(btn_frame,text="Reset",font=("times new roman",13,"bold"),bg="blue",fg="white")
+        delete_btn=Button(btn_frame,text="Reset",command=self.reset_data,font=("times new roman",13,"bold"),bg="blue",fg="white")
         delete_btn.grid(row=0,column=3)
 
         #take photo
@@ -436,10 +436,50 @@ class Student:
                 messagebox.showerror("Error",f"Due to {str(e)}",parent=self.root)
             
 
-
+#delete function banako
+    def delete_data(self):
+        if self.var_student_id.get()=="":
+            messagebox.showerror("Error","student id must be required to delete ",parent=self.root)
+        else:
+            try:
+                delete=messagebox.askyesno("student delete page","do you want to delete this student",parent=self.root)
+                if delete>0:
+                    conn=mysql.connector.connect(host="localhost",username="root",password="sudip@123",database="Face_recognition_system")
+                    my_cursor=conn.cursor()
+                    sql="delete from student where student_id=%s"
+                    val=(self.var_student_id.get(),)
+                    my_cursor.execute(sql,val)
+                    conn.commit()
+                    
+                    self.fetch_data()
+                    conn.close()
+                else:
+                    if not delete:
+                        return
+                    messagebox.showinfo("Delete","Successfully deleted",parent=self.root)
+                    
+            except Exception as e:
+                messagebox.showerror("Error",f"Due to {str(e)}",parent=self.root)
         
      
-         
+# reset ko lagi
+    def reset_data(self):
+        self.var_Department.set("Select Department"),
+        self.var_course.set("Select Course"),
+        self.var_year.set("Select year"),
+        self.var_semester.set("Select semester"),
+        self.var_student_id.set(""),
+        self.var_Name.set(""),
+        self.var_Division.set(""),
+        self.var_Roll.set(""),
+        self.var_Gender.set(""),
+        self.var_DOB.set(""),
+        self.var_Email.set(""),
+        self.var_phone.set(""),
+        self.var_Address.set(""),
+        self.var_Teacher.set(""),
+        self.var_radio1.set("")
+
     
         
 
