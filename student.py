@@ -480,6 +480,60 @@ class Student:
         self.var_Teacher.set(""),
         self.var_radio1.set("")
 
+#generate data set, user bata dataset liney, take photo sample
+
+    def generate_data(self):
+        if self.var_Department.get() == "Select Department"or self.var_course.get() == "Select Course"or self.var_year.get() == "Select Year" or self.var_semester.get() == "Select Semester"or not self.var_student_id.get()or not self.var_Name.get() or not self.var_Roll.get() or not self.var_Gender.get()or not self.var_DOB.get() or not self.var_Email.get()or not self.var_phone.get() or not self.var_Address.get()or not self.var_Teacher.get():
+          messagebox.showerror("Error","All Fields are required",) #shows in parent box and my sql connection
+        else:
+            try:
+               
+                conn=mysql.connector.connect(host="localhost",username="root",password="sudip@123",database="Face_recognition_system")
+                my_cursor=conn.cursor()
+                my_cursor.execute("select * from student")
+                my_result=my_cursor.fetchall()
+                id=0
+                for x in my_result:
+                    id+=1
+                my_cursor.execute("UPDATE student set Department=%s,course=%s,year=%s,semester=%s,Name=%s,Division=%s,Roll=%s,Gender=%s,DOB=%s,Email=%s,phone=%s,Address=%s,Teacher=%s,photosample=%s where student_id=%s",(
+                                                                                                                            self.var_Department.get(),
+                                                                                                                            self.var_course.get(),
+                                                                                                                            self.var_year.get(),
+                                                                                                                            self.var_semester.get(),
+                                                                                                                        
+                                                                                                                            self.var_Name.get(),
+                                                                                                                            self.var_Division.get(),
+                                                                                                                            self.var_Roll.get(),
+                                                                                                                            self.var_Gender.get(),
+                                                                                                                            self.var_DOB.get(),
+                                                                                                                            self.var_Email.get(),
+                                                                                                                            self.var_phone.get(),
+                                                                                                                            self.var_Address.get(),
+                                                                                                                            self.var_Teacher.get(),
+                                                                                                                            self.var_radio1.get(),
+                                                                                                                            int(self.var_student_id.get()),
+                                                                                                                            
+       
+
+                                                                                                                                  ))
+                conn.commit()
+                self.fetch_data()
+                self.reset_data()
+                conn.close()
+
+#file load gareko
+    face_classifier=cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
+    def face_cropped(img):
+        #grey scale ma covert garney first ma
+        gray=cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+        faces=face_classifier.detectMultiScale(gray,1.3,5)#scaling factor and minimum neighbor
+        
+
+                
+
+
+
+
     
         
 
