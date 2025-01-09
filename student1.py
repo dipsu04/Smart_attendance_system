@@ -197,7 +197,7 @@ class Student:
         radionbtn2=ttk.Radiobutton(class_Student_frame,text="No photo sample",value="no")
         radionbtn2.grid(row=6,column=1)
 
-        #bbuttons frame
+        #buttons frame
         btn_frame=Frame(class_Student_frame,bd=2,relief=RIDGE,bg="white")
         btn_frame.place(x=50,y=195,width=700,height=100)
 
