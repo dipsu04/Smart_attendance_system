@@ -29,19 +29,25 @@ class Train:
        
         #just button
 
-        b1_1=Button(self.root,text="Train Data Here",cursor="hand2",font=("times new roman",30,"bold"),bg="darkblue",fg="white")
+        b1_1=Button(self.root,text="Train Data Here",cursor="hand2",command=self.train_classifier,font=("times new roman",30,"bold"),bg="darkblue",fg="white")
         b1_1.place(x=300,y=380,width=200,height=60)
+
+
+
+
+
+
     def train_classifier(self):
         data_dir=("/Users/sudippokharel/Desktop/Backend/data")#variable ma image stored bhayp
         path=[ os.path.join(data_dir,file)for file in os.listdir(data_dir)]# data folder ko sabai image lai full path deko
 
         faces=[]
-        id=[]
+        ids=[]
 
         for image in path: #all images in directory is in image variable
-            img=Image.open(image).convert('L')# gray scale image
-            imageNp=np.array(img,'uint8')#array ko data type uint8,,,image lai numpy array ma convert gareko
-            id=int(os.path.split(image)[1].split('.'[1]))
+            img=Image.open(image).convert('L')# gray scale image(luminance)
+            imageNp=np.array(img,'uint8')#array ko data type uint8,,,image lai numpy array ma convert gareko or converted to grid system 
+            id=int(os.path.split(image)[1].split('.'[1]))#indexing the image. example(user1.1.jpg)
 
             faces.append(imageNp)
             ids.append(id)
@@ -49,6 +55,15 @@ class Train:
             cv2.waitkey(1)==13
 
         ids=np.array(ids)
+
+        #train the classifier
+
+        clf=cv2.face.LBPHFaceRecognizer_create()#algorithm triggered  garera clf variable ma stored
+        clf.train(faces,ids)
+        clf.write("classifier.xml")
+
+        cv2.destroyAllWindows()
+        messagebox.showinfo("Result of the trained dataset!!!!!")
 
 
 
