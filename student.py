@@ -5,6 +5,7 @@ from tkinter import messagebox
 import mysql.connector
 import cv2
 
+
 class Student:
     def __init__(self, root):
         self.root = root
@@ -525,7 +526,7 @@ class Student:
 
 
              #file load gareko
-                haarcascade_path = "/Users/sudippokharel/Desktop/Backend/myenv/lib/python3.12/site-packages/cv2/data/haarcascade_frontalface_default.xml"
+                haarcascade_path = r"/Users/sudippokharel/Desktop/Backend/myenv/lib/python3.12/site-packages/cv2/data/haarcascade_frontalface_default.xml"
                 face_classifier = cv2.CascadeClassifier(haarcascade_path)
                 #face_classifier=cv2.CascadeClassifier(cv2.data.haarcascades + "/Users/sudippokharel/Desktop/Backend/myenv/lib/python3.12/site-packages/cv2/data/haarcascade_frontalface_default.xml")
                 if face_classifier.empty():
@@ -562,7 +563,7 @@ class Student:
                         face=cv2.cvtColor(face,cv2.COLOR_BGR2GRAY)
                         file_name_path=f"data/user."+str(id)+"."+str(img_id)+".jpg"
                         cv2.imwrite(file_name_path,face)
-                        cv2.putText(face,str(img_id),(50,50),cv2.FONT_HERSHEY_COMPLEX,2,(0,255,0),2)# simple text ma pass gareko ,color and thickness 
+                        cv2.putText(face,str(img_id),(50,50),cv2.FONT_HERSHEY_COMPLEX,2,(0,255,0),2)# simple text ma pass gareko ,color and thickness , image ma dekhney number
                         cv2.imshow("cropped face",face)
                     else:
                         print("no valid cropped face detectecd in the frame")
