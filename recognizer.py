@@ -51,12 +51,12 @@ class Face_Recognition:
 
 
                 if confidence>80:
-                    cv2.putText(img,f"Student Name:{i}",(x,y-55),cv2.FONT_HERSHEY_COMPLEX,0.5,(0,255,0),10)
+                    cv2.putText(img,f"Student Name: {i}",(x,y-55),cv2.FONT_HERSHEY_SIMPLEX,1.2,(0,0,0),10)
 
 
                 else:
                     cv2.rectangle(img,(x,y),(x+w,y+h),(0,0,255),3)
-                    cv2.putText(img,"Unknown Face",(x,y-55),cv2.FONT_HERSHEY_COMPLEX,0.1,(255,0,0),3)
+                    cv2.putText(img,"Unknown Face",(x,y-55),cv2.FONT_HERSHEY_SIMPLEX,1.2,(255,0,0),3)
 
                 coordinates=[x,y,w,h]#passed the coodrinates
             return coordinates
