@@ -520,16 +520,27 @@ class Student:
                 self.fetch_data()
                 self.reset_data()
                 conn.close()
+                haarcascade_path = cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
+                print("Path to Haarcascade file:", haarcascade_path)
+
 
              #file load gareko
-                face_classifier=cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
+                haarcascade_path = "/Users/sudippokharel/Desktop/Backend/myenv/lib/python3.12/site-packages/cv2/data/haarcascade_frontalface_default.xml"
+                face_classifier = cv2.CascadeClassifier(haarcascade_path)
+                #face_classifier=cv2.CascadeClassifier(cv2.data.haarcascades + "/Users/sudippokharel/Desktop/Backend/myenv/lib/python3.12/site-packages/cv2/data/haarcascade_frontalface_default.xml")
+                if face_classifier.empty():
+                    print("Error openeing")
+                else:
+                    print("succesfully loadeed")
                 
                 def face_cropped(img):
                    #grey scale ma covert garney first ma
                     gray=cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-                    faces=face_classifier.detectMultiScale(gray,1.3,5)#scaling factor and minimum neighbor
+                    faces=face_classifier.detectMultiScale(gray,1.3,5,flags=cv2.CASCADE_SCALE_IMAGE,minSize=(30,30))#scaling factor and minimum neighbor
                     if len(faces) == 0:
+                        print("No faces detected in the frame")
                         return None
+
 
                     for (x,y,w,h) in faces: #camera bata crop garera liney image ko size
                          face_cropped=img[y:y+h,x:x+w]
@@ -538,23 +549,50 @@ class Student:
                 img_id=0
                 while True:
                     ret,my_frame=cap.read() #camera read garxa
+                    if my_frame is None or my_frame.size == 0:
+                        print("Empty frame captured")
+                        continue
                     if not ret:
-                        messagebox.showerror("Error", "Failed to capture image from the camera")
+                         print("Failed to read from the camera")
+                         messagebox.showerror("Error", "Failed to capture image from the camera")
                     cropped_face=face_cropped(my_frame)
                     if cropped_face is not None:#frame ma image xa bhane paxi sample linxa
                         img_id+=1
-                    face=cv2.resize(face_cropped(my_frame),(450,450))
-                    face=cv2.cvtColor(face,cv2.COLOR_BGR2GRAY)
-                    file_name_path="data/user."+str(id)+"."+str(img_id)+".jpg"
-                    cv2.imwrite(file_name_path,face)
-                    cv2.putText(face,str(img_id),(50,50),cv2.FONT_HERSHEY_COMPLEX,2,(0,255,0),2)# simple text ma pass gareko ,color and thickness 
-                    cv2.imshow("cropped face",face)
+                        face=cv2.resize(cropped_face,(450,450))
+                        face=cv2.cvtColor(face,cv2.COLOR_BGR2GRAY)
+                        file_name_path=f"data/user."+str(id)+"."+str(img_id)+".jpg"
+                        cv2.imwrite(file_name_path,face)
+                        cv2.putText(face,str(img_id),(50,50),cv2.FONT_HERSHEY_COMPLEX,2,(0,255,0),2)# simple text ma pass gareko ,color and thickness 
+                        cv2.imshow("cropped face",face)
+                    else:
+                        print("no valid cropped face detectecd in the frame")
 
-                    if cv2.waitKey(1)==13 or int(img_id)==100:
+                    if cv2.waitKey(50)==13 or int(img_id)==100:
                         break
                 cap.release()
                 cv2.destroyAllWindows()
-                messagebox.showinfo("Result","Generating dataset completed!!!!")
+                # cap = cv2.VideoCapture(0)
+                # while True:
+                #     ret, frame = cap.read()
+                #     if not ret:
+                #         print("Failed to capture frame")
+                #     break
+
+                # gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+                # faces = face_classifier.detectMultiScale(gray, 1.3, 5)
+
+                # for (x, y, w, h) in faces:
+                #     cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
+
+                #     cv2.imshow("Face Detection", frame)
+
+                #     if cv2.waitKey(50) == 13:  # Press Enter to exit
+                #         break
+
+                #     cap.release()
+                #     cv2.destroyAllWindows()
+
+                # messagebox.showinfo("Result","Generating dataset completed!!!!")
             except Exception as e:
                 messagebox.showerror("Error",f"Due to {str(e)}",parent=self.root)
              
