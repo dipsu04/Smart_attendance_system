@@ -2,6 +2,8 @@ from tkinter import *
 from tkinter import ttk
 from PIL import Image, ImageTk
 from student import Student
+import subprocess
+from train import Train
 
 class Face_Recognition_System:
     def __init__(self, root):
@@ -105,11 +107,11 @@ class Face_Recognition_System:
         img8 = img8.resize((220, 220), Image.LANCZOS)  # Adjusted size
         self.photoimg8 = ImageTk.PhotoImage(img8)
 
-        b1=Button(bg_img,image=self.photoimg8,cursor="hand2")
+        b1=Button(bg_img,image=self.photoimg8,cursor="hand2",command=self.train_data)
         b1.place(x=100,y=350,width=200,height=175)
 
 
-        b1_1=Button(bg_img,text="Train Data",cursor="hand2",font=("times new roman",15,"bold"),bg="darkblue",fg="white")
+        b1_1=Button(bg_img,text="Train Data",cursor="hand2",command=self.train_data,font=("times new roman",15,"bold"),bg="darkblue",fg="white")
         b1_1.place(x=100,y=510,width=202,height=35)
 
 
@@ -118,11 +120,11 @@ class Face_Recognition_System:
         img9 = img9.resize((220, 220), Image.LANCZOS)  # Adjusted size
         self.photoimg9 = ImageTk.PhotoImage(img9)
 
-        b1=Button(bg_img,image=self.photoimg9,cursor="hand2")
+        b1=Button(bg_img,image=self.photoimg9,cursor="hand2",command=self.open_img)
         b1.place(x=400,y=350,width=200,height=175)
 
 
-        b1_1=Button(bg_img,text="Photos",cursor="hand2",font=("times new roman",15,"bold"),bg="darkblue",fg="white")
+        b1_1=Button(bg_img,text="Photos",cursor="hand2",command=self.open_img,font=("times new roman",15,"bold"),bg="darkblue",fg="white")
         b1_1.place(x=400,y=510,width=200,height=35)
 
 
@@ -153,12 +155,27 @@ class Face_Recognition_System:
 
         #function buttons
 
-        def student_details(self):
+    def student_details(self):
             self.new_window=Toplevel(self.root)
             self.app=Student(self.new_window)
+    def train_data(self):
+            self.new_window=Toplevel(self.root)
+            self.app=Train(self.new_window)
+
+    def open_img(self):
+      try:
+        # Use subprocess.run with a list and ensure the correct path is passed
+        subprocess.run(["open", "/Users/sudippokharel/Desktop/Backend/data"], check=True)
+      except subprocess.CalledProcessError as e:
+        print(f"Command failed with return code {e.returncode}. Error: {e}")
+      except FileNotFoundError:
+        print("The specified directory or the `open` command was not found.")
+      except Exception as e:
+        print(f"An unexpected error occurred: {e}")
 
 
-        if __name__ == "__main__":
+
+if __name__ == "__main__":
             root = Tk()
             obj = Face_Recognition_System(root)
             root.mainloop()
