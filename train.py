@@ -45,14 +45,26 @@ class Train:
         ids=[]
 
         for image in path: #all images in directory is in image variable
-            img=Image.open(image).convert('L')# gray scale image(luminance)
-            imageNp=np.array(img,'uint8')#array ko data type uint8,,,image lai numpy array ma convert gareko or converted to grid system 
-            id=int(os.path.split(image)[1].split('.'[1]))#indexing the image. example(user1.1.jpg)
+            print(f"Processing file: {image}")
+            if not image.endswith(('.png','.jpg','.jpeg')):
+                print(f"skipping non image file")
+                continue
+            try:
+                img=Image.open(image).convert('L')# gray scale image(luminance)
+                imageNp=np.array(img,'uint8')#array ko data type uint8,,,image lai numpy array ma convert gareko or converted to grid system 
+                id=int(os.path.split(image)[1].split('.')[1])#indexing the image. example(user1.1.jpg)
+                print(f"Extracted ID: {id}")
 
-            faces.append(imageNp)
-            ids.append(id)
-            cv2.imshow("Training the dataset",imageNp)
-            cv2.waitkey(1)==13
+                faces.append(imageNp)
+                ids.append(id)
+                cv2.imshow("Training the dataset",imageNp)
+            
+                # cv2.waitkey(1)==13
+               
+            except Exception as e:
+                print(f"An error occured {image}:{e}")
+                continue
+
 
         ids=np.array(ids)
 
@@ -63,7 +75,7 @@ class Train:
         clf.write("classifier.xml")
 
         cv2.destroyAllWindows()
-        messagebox.showinfo("Result of the trained dataset!!!!!")
+        messagebox.showinfo("Training Result", f"Training completed! Processed {image} images.")
 
 
 
