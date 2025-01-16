@@ -403,13 +403,14 @@ class Student:
                 update=messagebox.askyesno("update","do you want to update this details",parent=self.root)
                 if update>0:
                     conn=mysql.connector.connect(host="localhost",username="root",password="sudip@123",database="Face_recognition_system")
+                    
                     my_cursor=conn.cursor()
                     my_cursor.execute("UPDATE student set Department=%s,course=%s,year=%s,semester=%s,Name=%s,Division=%s,Roll=%s,Gender=%s,DOB=%s,Email=%s,phone=%s,Address=%s,Teacher=%s,photosample=%s where student_id=%s",(
                                                                                                                             self.var_Department.get(),
                                                                                                                             self.var_course.get(),
                                                                                                                             self.var_year.get(),
                                                                                                                             self.var_semester.get(),
-                                                                                                                            
+                                                                                                                        
                                                                                                                             self.var_Name.get(),
                                                                                                                             self.var_Division.get(),
                                                                                                                             self.var_Roll.get(),
@@ -537,7 +538,7 @@ class Student:
                 def face_cropped(img):
                    #grey scale ma covert garney first ma
                     gray=cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-                    faces=face_classifier.detectMultiScale(gray,1.3,5,flags=cv2.CASCADE_SCALE_IMAGE,minSize=(30,30))#scaling factor and minimum neighbor
+                    faces=face_classifier.detectMultiScale(gray,1.3,5,flags=cv2.CASCADE_SCALE_IMAGE,minSize=(30,30))#scaling factor and minimum neighbor,detectMultiScale detects faces in the grayscale image using the Haar Cascade classifier.
                     if len(faces) == 0:
                         print("No faces detected in the frame")
                         return None
@@ -553,7 +554,7 @@ class Student:
                     if my_frame is None or my_frame.size == 0:
                         print("Empty frame captured")
                         continue
-                    if not ret:
+                    if not ret:#return value is true or false
                          print("Failed to read from the camera")
                          messagebox.showerror("Error", "Failed to capture image from the camera")
                     cropped_face=face_cropped(my_frame)
@@ -568,7 +569,7 @@ class Student:
                     else:
                         print("no valid cropped face detectecd in the frame")
 
-                    if cv2.waitKey(50)==13 or int(img_id)==100:
+                    if cv2.waitKey(50)==13 or int(img_id)==500:
                         break
                 cap.release()
                 cv2.destroyAllWindows()
