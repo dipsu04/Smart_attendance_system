@@ -66,7 +66,7 @@ class Train:
                 continue
 
 
-        ids=np.array(ids)
+        ids=np.array(ids)#numpy array ma pass gariyo ids lai
 
         #train the classifier
 
