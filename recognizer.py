@@ -31,7 +31,7 @@ class Face_Recognition:
             for(x,y,w,h) in features:
                 cv2.rectangle(img,(x,y),(x+w,y+h),(0,255,0),3)
                 id,predict=clf.predict(gray_image[y:y+h,x:x+w])#predicting the gray scale image
-                confidence=int((100*(1-predict/300)))#formuale througb LBPH
+                confidence=int((100*(1-predict/800)))#formuale througb LBPH
 
                 #retreive data from database
 
@@ -50,14 +50,16 @@ class Face_Recognition:
 
 
 
-                if confidence>80:
+                if confidence>79:
+                   
                     cv2.putText(img,f"Student Name: {i}",(x,y-55),cv2.FONT_HERSHEY_SIMPLEX,1.2,(0,0,0),10)
-
-
+                
                 else:
                     cv2.rectangle(img,(x,y),(x+w,y+h),(0,0,255),3)
                     cv2.putText(img,"Unknown Face",(x,y-55),cv2.FONT_HERSHEY_SIMPLEX,1.2,(255,0,0),3)
 
+
+            
                 coordinates=[x,y,w,h]#passed the coodrinates
             return coordinates
         def recognize(img,clf,faceCascade):
