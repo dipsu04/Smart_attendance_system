@@ -4,6 +4,9 @@ from PIL import Image, ImageTk
 from tkinter import messagebox
 import mysql.connector
 import cv2
+import shutil
+import os
+import numpy as np
 
 
 class Student:
@@ -32,7 +35,7 @@ class Student:
         
         
         # First Image
-        img = Image.open(r"/Users/sudippokharel/Downloads/sas1.jpg")
+        img = Image.open(r"/Users/sudippokharel/Downloads/developers.jpg")
         img = img.resize((500, 130), Image.LANCZOS)  # Adjusted size
         self.photoimg = ImageTk.PhotoImage(img)
 
@@ -40,7 +43,7 @@ class Student:
         f_lbl.place(x=0, y=0, width=500, height=130)
 
         # Second Image
-        img1 = Image.open(r"/Users/sudippokharel/Downloads/sas1.jpg")
+        img1 = Image.open(r"/Users/sudippokharel/Downloads/developers.jpg")
         img1 = img1.resize((400, 130), Image.LANCZOS)  # Adjusted size
         self.photoimg1 = ImageTk.PhotoImage(img1)
 
@@ -48,7 +51,7 @@ class Student:
         f_lbl1.place(x=500, y=0, width=400, height=130)
 
         # Third Image
-        img2 = Image.open(r"/Users/sudippokharel/Downloads/sas1.jpg")
+        img2 = Image.open(r"/Users/sudippokharel/Downloads/developers.jpg")
         img2 = img2.resize((530, 130), Image.LANCZOS)  # Adjusted size
         self.photoimg2 = ImageTk.PhotoImage(img2)
 
@@ -58,7 +61,7 @@ class Student:
 
         
          # bg Image
-        img3 = Image.open(r"/Users/sudippokharel/Downloads/sas1.jpg")
+        img3 = Image.open(r"/Users/sudippokharel/Downloads/developers.jpg")
         img3 = img3.resize((1530, 710), Image.LANCZOS)  # Adjusted size
         self.photoimg3 = ImageTk.PhotoImage(img3)
 
@@ -82,7 +85,7 @@ class Student:
         
         
         
-        img_left = Image.open(r"/Users/sudippokharel/Downloads/sas1.jpg")
+        img_left = Image.open(r"/Users/sudippokharel/Downloads/developers.jpg")
         img_left = img_left.resize((680, 130), Image.LANCZOS)  # Adjusted size
         self.photoimg_left = ImageTk.PhotoImage(img_left)
         
@@ -221,38 +224,38 @@ class Student:
         radionbtn2.grid(row=6,column=1)
 
         #bbuttons frame
-        btn_frame=Frame(class_Student_frame,bd=2,relief=RIDGE,bg="white")
+        btn_frame=Frame(class_Student_frame,bd=2,relief=RIDGE,bg="")
         btn_frame.place(x=50,y=195,width=700,height=100)
 
         #save
-        save_btn=Button(btn_frame,text="Save",command=self.add_data,font=("times new roman",13,"bold"),bg="blue",fg="white")
+        save_btn=Button(btn_frame,text="Save",command=self.add_data,font=("times new roman",13,"bold"),bg="white",fg="black")
         save_btn.grid(row=0,column=0)
 
         #update
-        update_btn=Button(btn_frame,text="Update",command=self.update_data,font=("times new roman",13,"bold"),bg="blue",fg="white")
+        update_btn=Button(btn_frame,text="Update",command=self.update_data,font=("times new roman",13,"bold"),bg="white",fg="black")
         update_btn.grid(row=0,column=1)
 
         #delete
-        delete_btn=Button(btn_frame,text="Delete",command=self.delete_data,font=("times new roman",13,"bold"),bg="blue",fg="white")
+        delete_btn=Button(btn_frame,text="Delete",command=self.delete_data,font=("times new roman",13,"bold"),bg="white",fg="black")
         delete_btn.grid(row=0,column=2)
 
          #reset
-        delete_btn=Button(btn_frame,text="Reset",command=self.reset_data,font=("times new roman",13,"bold"),bg="blue",fg="white")
+        delete_btn=Button(btn_frame,text="Reset",command=self.reset_data,font=("times new roman",13,"bold"),bg="white",fg="black")
         delete_btn.grid(row=0,column=3)
 
         #take photo
-        take_photo_btn=Button(btn_frame,text="Take Photo Sample",command=self.generate_data,font=("times new roman",13,"bold"),bg="blue",fg="white")
+        take_photo_btn=Button(btn_frame,text="Take Photo Sample",command=self.generate_data,font=("times new roman",13,"bold"),bg="white",fg="black")
         take_photo_btn.grid(row=0,column=4)
 
          #Update photo
-        update_photo_btn=Button(btn_frame,text="Update Photo Sample",font=("times new roman",13,"bold"),bg="blue",fg="white")
+        update_photo_btn=Button(btn_frame,text="Update Photo Sample",font=("times new roman",13,"bold"),bg="white",fg="black")
         update_photo_btn.grid(row=0,column=5)
 
 
         #right label frame
         Right_frame=LabelFrame(main_frame,bd=2,bg="white",relief=RIDGE,text="Student Details",font=("times new roman",12,"bold"))
         Right_frame.place(x=705,y=10,width=560,height=580)
-        img_right = Image.open(r"/Users/sudippokharel/Downloads/sas1.jpg")
+        img_right = Image.open(r"/Users/sudippokharel/Downloads/developers.jpg")
         img_right = img_left.resize((680, 130), Image.LANCZOS)  # Adjusted size
         self.photoimg_right = ImageTk.PhotoImage(img_right)
         
@@ -526,77 +529,60 @@ class Student:
                 print("Path to Haarcascade file:", haarcascade_path)
 
 
-             #file load gareko
-                haarcascade_path = r"/Users/sudippokharel/Desktop/Backend/myenv/lib/python3.12/site-packages/cv2/data/haarcascade_frontalface_default.xml"
-                face_classifier = cv2.CascadeClassifier(haarcascade_path)
-                #face_classifier=cv2.CascadeClassifier(cv2.data.haarcascades + "/Users/sudippokharel/Desktop/Backend/myenv/lib/python3.12/site-packages/cv2/data/haarcascade_frontalface_default.xml")
-                if face_classifier.empty():
-                    print("Error openeing")
-                else:
-                    print("succesfully loadeed")
-                
-                def face_cropped(img):
-                   #grey scale ma covert garney first ma
-                    gray=cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-                    faces=face_classifier.detectMultiScale(gray,1.3,5,flags=cv2.CASCADE_SCALE_IMAGE,minSize=(30,30))#scaling factor and minimum neighbor,detectMultiScale detects faces in the grayscale image using the Haar Cascade classifier.
-                    if len(faces) == 0:
-                        print("No faces detected in the frame")
-                        return None
+                prototxt_path = "model/deploy.prototxt"
+                caffemodel_path = "model/res10_300x300_ssd_iter_140000.caffemodel"
+                face_net = cv2.dnn.readNetFromCaffe(prototxt_path, caffemodel_path)
 
+                # Function to detect faces using the DNN model
+                def detect_faces_dnn(frame):
+                    (h, w) = frame.shape[:2]
+                    blob = cv2.dnn.blobFromImage(frame, 1.0, (300, 300), (104.0, 177.0, 123.0))
+                    face_net.setInput(blob)
+                    detections = face_net.forward()
 
-                    for (x,y,w,h) in faces: #camera bata crop garera liney image ko size
-                         face_cropped=img[y:y+h,x:x+w]
-                         return face_cropped
-                cap=cv2.VideoCapture(0) #camera open
-                img_id=0
+                    faces = []
+                    for i in range(0, detections.shape[2]):
+                        confidence = detections[0, 0, i, 2]
+                        if confidence > 0.5:  # Adjust confidence threshold as needed
+                            box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
+                            (x1, y1, x2, y2) = box.astype("int")
+                            faces.append((x1, y1, x2 - x1, y2 - y1))  # (x, y, w, h)
+                    return faces
+
+                    # Open webcam to capture face data
+                cap = cv2.VideoCapture(0)
+                img_id = 0
+
                 while True:
-                    ret,my_frame=cap.read() #camera read garxa
-                    if my_frame is None or my_frame.size == 0:
-                        print("Empty frame captured")
-                        continue
-                    if not ret:#return value is true or false
-                         print("Failed to read from the camera")
-                         messagebox.showerror("Error", "Failed to capture image from the camera")
-                    cropped_face=face_cropped(my_frame)
-                    if cropped_face is not None:#frame ma image xa bhane paxi sample linxa
-                        img_id+=1
-                        face=cv2.resize(cropped_face,(450,450))
-                        face=cv2.cvtColor(face,cv2.COLOR_BGR2GRAY)
-                        file_name_path=f"data/user."+str(id)+"."+str(img_id)+".jpg"
-                        cv2.imwrite(file_name_path,face)
-                        cv2.putText(face,str(img_id),(50,50),cv2.FONT_HERSHEY_COMPLEX,2,(0,255,0),2)# simple text ma pass gareko ,color and thickness , image ma dekhney number
-                        cv2.imshow("cropped face",face)
-                    else:
-                        print("no valid cropped face detectecd in the frame")
-
-                    if cv2.waitKey(50)==13 or int(img_id)==500:
+                    ret, my_frame = cap.read()
+                    if not ret:
+                        messagebox.showerror("Error", "Failed to capture image from the camera")
                         break
+
+                    # Detect faces in the frame
+                    faces = detect_faces_dnn(my_frame)
+                    for (x, y, w, h) in faces:
+                        cropped_face = my_frame[y:y+h, x:x+w]
+                        if cropped_face is not None:
+                            img_id += 1
+                            face = cv2.resize(cropped_face, (450, 450))
+                            face = cv2.cvtColor(face, cv2.COLOR_BGR2GRAY)
+                            file_name_path = f"data/user.{str(id)}.{str(img_id)}.jpg"
+                            cv2.imwrite(file_name_path, face)
+                            cv2.putText(face, str(img_id), (50, 50), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 255, 0), 2)
+                            cv2.imshow("Cropped Face", face)
+
+                    if cv2.waitKey(50) == 13 or int(img_id) == 500:  # Press Enter or capture 500 images
+                        break
+
                 cap.release()
                 cv2.destroyAllWindows()
-                # cap = cv2.VideoCapture(0)
-                # while True:
-                #     ret, frame = cap.read()
-                #     if not ret:
-                #         print("Failed to capture frame")
-                #     break
+                messagebox.showinfo("Result", "Dataset generation completed!")
 
-                # gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-                # faces = face_classifier.detectMultiScale(gray, 1.3, 5)
-
-                # for (x, y, w, h) in faces:
-                #     cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
-
-                #     cv2.imshow("Face Detection", frame)
-
-                #     if cv2.waitKey(50) == 13:  # Press Enter to exit
-                #         break
-
-                #     cap.release()
-                #     cv2.destroyAllWindows()
-
-                # messagebox.showinfo("Result","Generating dataset completed!!!!")
             except Exception as e:
-                messagebox.showerror("Error",f"Due to {str(e)}",parent=self.root)
+                messagebox.showerror("Error", f"Due to {str(e)}", parent=self.root)
+
+               
              
       
 
